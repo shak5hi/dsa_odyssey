@@ -101,7 +101,34 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       const notesRes = await fetch('http://localhost:5000/api/notes');
       const notesData = await notesRes.json();
-      dispatch({ type: 'LOAD', payload: { ...data, notes: notesData.notes || {} } });
+      let stateData = { ...data, notes: notesData.notes || {} };
+
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (stateData.daily_quest_date !== todayStr) {
+         const realmId = stateData.activeRealm || 'arrays';
+         const realm = REALMS.find(r => r.id === realmId) || REALMS[0];
+         const completed = stateData.completedQuests || [];
+         const available = realm.questions.filter(q => !completed.includes(q.id));
+         const picked = available.sort(() => 0.5 - Math.random()).slice(0, 3).map(q => q.id);
+         
+         stateData.dailyQuests = picked;
+         stateData.daily_quest_date = todayStr;
+         stateData.daily_quest_realm = realm.id;
+         
+         fetch('http://localhost:5000/api/state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+               daily_quests: picked,
+               daily_quest_date: todayStr,
+               daily_quest_realm: realm.id
+            })
+         });
+      } else {
+         stateData.dailyQuests = stateData.daily_quests || [];
+      }
+
+      dispatch({ type: 'LOAD', payload: stateData });
     }
     load();
   }, []);
