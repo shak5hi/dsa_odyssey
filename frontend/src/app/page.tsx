@@ -31,7 +31,7 @@ export default function LandingPage() {
               Only one who masters the ancient patterns can restore order. Are you ready?"
             </div>
             <div className="rpg-dialogue-action" style={{ textAlign: 'center' }}>
-              <Link href="/kingdom" style={{ textDecoration: 'none' }}>
+              <Link href="/login" style={{ textDecoration: 'none' }}>
                 <button className="btn-gold landing-start-btn">
                   ⚔️ Start Adventure
                 </button>

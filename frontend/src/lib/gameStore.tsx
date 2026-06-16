@@ -2,6 +2,25 @@
 import { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
 import { REALMS, LEVELS, ACHIEVEMENTS, getLevelInfo, getActiveRealm, REALM_PROGRESSION } from '@/lib/data';
 
+async function authFetch(url: string, options: RequestInit = {}) {
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    if (typeof window !== 'undefined') window.location.href = '/login';
+    throw new Error('Not authenticated');
+  }
+  const headers = { ...options.headers, 'Authorization': `Bearer ${token}` };
+  const res = await fetch(url, { ...options, headers });
+  if (res.status === 401 || res.status === 403) {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    }
+    throw new Error('Session expired');
+  }
+  return res;
+}
+
 export interface GameState {
   xp: number;
   streak: number;
@@ -97,11 +116,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // Load state on mount
   useEffect(() => {
     async function load() {
-      const res = await fetch('http://localhost:5000/api/state');
-      const data = await res.json();
-      const notesRes = await fetch('http://localhost:5000/api/notes');
-      const notesData = await notesRes.json();
-      let stateData = { ...data, notes: notesData.notes || {} };
+      try {
+        const res = await authFetch('http://localhost:5000/api/state');
+        const data = await res.json();
+        const notesRes = await authFetch('http://localhost:5000/api/notes');
+        const notesData = await notesRes.json();
+        let stateData = { ...data, notes: notesData.notes || {} };
 
       const todayStr = new Date().toISOString().slice(0, 10);
       if (stateData.daily_quest_date !== todayStr) {
@@ -115,7 +135,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
          stateData.daily_quest_date = todayStr;
          stateData.daily_quest_realm = realm.id;
          
-         fetch('http://localhost:5000/api/state', {
+         authFetch('http://localhost:5000/api/state', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -129,13 +149,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
 
       dispatch({ type: 'LOAD', payload: stateData });
+      } catch (err) {
+        console.error('Failed to load state', err);
+      }
     }
     load();
   }, []);
 
   const completeQuest = useCallback(async (qid: string) => {
     if (state.completed[qid]) { await uncompleteQuest(qid); return; }
-    const res = await fetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'complete' }) });
+    const res = await authFetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'complete' }) });
     const data = await res.json();
     if (!data.ok) { showToast(data.error || 'Error', 'red'); return; }
     dispatch({ type: 'COMPLETE_QUEST', qid, xpGained: data.xpGained, newXp: data.xp, streak: data.streak, bestStreak: data.bestStreak, inventory: data.inventory, achievements: data.achievements, newAchievements: data.newAchievements, realmCompleted: data.realmCompleted, activeRealm: data.activeRealm });
@@ -155,7 +178,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const realm = REALMS.find(r => r.id === data.realmCompleted);
       if (realm && !state.ceremonySeen[data.realmCompleted]) {
         dispatch({ type: 'MARK_CEREMONY_SEEN', realmId: data.realmCompleted });
-        await fetch('http://localhost:5000/api/state', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field: 'ceremony_seen', value: { ...state.ceremonySeen, [data.realmCompleted]: true } }) });
+        await authFetch('http://localhost:5000/api/state', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field: 'ceremony_seen', value: { ...state.ceremonySeen, [data.realmCompleted]: true } }) });
         setTimeout(() => dispatch({ type: 'SHOW_CEREMONY', realmId: data.realmCompleted }), 600);
       }
     }
@@ -175,7 +198,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [state.completed, state.ceremonySeen, showToast]);
 
   async function uncompleteQuest(qid: string) {
-    const res = await fetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'uncomplete' }) });
+    const res = await authFetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'uncomplete' }) });
     const data = await res.json();
     if (!data.ok) { showToast('Error', 'red'); return; }
     dispatch({ type: 'UNCOMPLETE_QUEST', qid, newXp: data.xp, inventory: data.inventory });
@@ -183,7 +206,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   const saveNote = useCallback(async (qid: string, notes: string) => {
-    await fetch('http://localhost:5000/api/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, notes }) });
+    await authFetch('http://localhost:5000/api/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, notes }) });
     dispatch({ type: 'SAVE_NOTE', qid, notes });
     showToast('📝 Notes saved', 'gold');
   }, [showToast]);
@@ -195,7 +218,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (q) { foundRealm = { realm, q }; break; }
     }
     if (!foundRealm) return;
-    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, title: foundRealm.q.name, content, realmId: foundRealm.realm.id, realmName: foundRealm.realm.name, pattern: foundRealm.realm.pattern, difficulty: foundRealm.q.diff }) });
+    await authFetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, title: foundRealm.q.name, content, realmId: foundRealm.realm.id, realmName: foundRealm.realm.name, pattern: foundRealm.realm.pattern, difficulty: foundRealm.q.diff }) });
     showToast('📓 Added to Codex!', 'gold');
   }, [showToast]);
 

@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useGame, getLevelInfo, LEVELS } from '@/lib/gameStore';
 import { REALMS, REALM_PROGRESSION } from '@/lib/data';
 
@@ -20,6 +21,22 @@ const NAV_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname();
   const { state } = useGame();
+  const [username, setUsername] = useState('Hero');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const u = localStorage.getItem('username');
+      if (u) setUsername(u);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('username');
+      window.location.href = '/login';
+    }
+  };
 
   const lvl = getLevelInfo(state.xp);
   const nextLvl = LEVELS.find(l => l.lvl === lvl.lvl + 1) || lvl;
@@ -64,7 +81,7 @@ export function Sidebar() {
         <div className="char-top">
           <div className="char-avatar">{lvl.avatar}</div>
           <div className="char-info">
-            <div className="char-name">Hero</div>
+            <div className="char-name">{username}</div>
             <div className="char-title">{lvl.title}</div>
             <div className="char-level">Level {lvl.lvl}</div>
           </div>
@@ -129,6 +146,15 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      <div className="sidebar-logout" style={{ padding: '15px', marginTop: 'auto' }}>
+        <button 
+          onClick={handleLogout} 
+          style={{ width: '100%', background: 'none', border: '1px solid #444', color: '#888', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontFamily: 'monospace', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+        >
+          🚪 Logout
+        </button>
+      </div>
     </aside>
   );
 }
