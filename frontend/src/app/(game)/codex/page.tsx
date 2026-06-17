@@ -15,9 +15,14 @@ export default function CodexPage() {
   const [editContent, setEditContent] = useState('');
 
   const load = async () => {
-    const res = await authFetch('http://localhost:5000/api/codex');
-    const { entries } = await res.json();
-    setEntries(entries || []);
+    try {
+      const res = await authFetch('http://localhost:5000/api/codex');
+      if (!res.ok) return;
+      const data = await res.json();
+      setEntries(data.entries || []);
+    } catch {
+      // backend may not be ready yet, silently fail
+    }
   };
 
   useEffect(() => { load(); }, []);
@@ -26,10 +31,11 @@ export default function CodexPage() {
   const filtered = filter === 'all' ? entries : entries.filter(e => e.pattern === filter);
 
   const handleDelete = async (id: number) => {
-    await authFetch('http://localhost:5000/api/codex', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    await authFetch(`http://localhost:5000/api/codex?id=${id}`, { method: 'DELETE' });
     showToast('Entry deleted', 'muted');
     load();
   };
+
 
   const handleCreate = async () => {
     if (!newTitle.trim()) return;
