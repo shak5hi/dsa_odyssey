@@ -112,7 +112,7 @@ app.post('/api/register', async (req, res) => {
     
     await runQuery('INSERT INTO user_state (user_id) VALUES (?)', [userId]);
 
-    const token = jwt.sign({ id: userId, username }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: userId, username }, JWT_SECRET, { expiresIn: '30d' });
     res.json({ success: true, token, user: { id: userId, username } });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -128,14 +128,14 @@ app.post('/api/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(400).json({ error: 'Invalid username or password' });
 
-    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
     res.json({ success: true, token, user: { id: user.id, username: user.username } });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/state
+// GET /api/state — returns fully camelCased state for the frontend
 app.get('/api/state', authenticateToken, async (req, res) => {
   try {
     const userState = await getRow(`SELECT * FROM user_state WHERE user_id = ?`, [req.user.id]);
@@ -143,43 +143,64 @@ app.get('/api/state', authenticateToken, async (req, res) => {
     
     if (!userState) return res.status(404).json({ error: 'State not found' });
 
-    userState.inventory = JSON.parse(userState.inventory || '[]');
-    userState.achievements = JSON.parse(userState.achievements || '{}');
-    userState.daily_quests = JSON.parse(userState.daily_quests || '[]');
-    userState.ceremony_seen = JSON.parse(userState.ceremony_seen || '{}');
-    userState.bonus_done = JSON.parse(userState.bonus_done || '{}');
-    
+    // Build completed map: { qid: { date, notes } }
+    const completedMap = {};
+    for (const q of quests) {
+      completedMap[q.qid] = { date: q.completed_at || '', notes: q.notes || '' };
+    }
+
+    // Build notes map: { qid: notes }
+    const notesMap = {};
+    for (const q of quests) {
+      if (q.notes) notesMap[q.qid] = q.notes;
+    }
+
     res.json({
-      ...userState,
-      completedQuests: quests.map(q => q.qid)
+      xp: userState.xp || 0,
+      streak: userState.streak || 0,
+      bestStreak: userState.best_streak || 0,
+      lastActivity: userState.last_activity || null,
+      inventory: JSON.parse(userState.inventory || '[]'),
+      achievements: JSON.parse(userState.achievements || '{}'),
+      ceremonySeen: JSON.parse(userState.ceremony_seen || '{}'),
+      bonusDone: JSON.parse(userState.bonus_done || '{}'),
+      dailyQuests: JSON.parse(userState.daily_quests || '[]'),
+      dailyQuestDate: userState.daily_quest_date || null,
+      dailyQuestRealm: userState.daily_quest_realm || null,
+      completed: completedMap,
+      notes: notesMap,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// POST /api/state
+// POST /api/state — accepts camelCase fields
 app.post('/api/state', authenticateToken, async (req, res) => {
   try {
     const d = req.body;
-    let sql = `UPDATE user_state SET `;
-    let updates = [];
-    let params = [];
+    const updates = [];
+    const params = [];
     
     if (d.xp !== undefined) { updates.push('xp = ?'); params.push(d.xp); }
     if (d.streak !== undefined) { updates.push('streak = ?'); params.push(d.streak); }
+    if (d.bestStreak !== undefined) { updates.push('best_streak = ?'); params.push(d.bestStreak); }
     if (d.best_streak !== undefined) { updates.push('best_streak = ?'); params.push(d.best_streak); }
+    if (d.lastActivity !== undefined) { updates.push('last_activity = ?'); params.push(d.lastActivity); }
     if (d.last_activity !== undefined) { updates.push('last_activity = ?'); params.push(d.last_activity); }
     if (d.inventory !== undefined) { updates.push('inventory = ?'); params.push(JSON.stringify(d.inventory)); }
     if (d.achievements !== undefined) { updates.push('achievements = ?'); params.push(JSON.stringify(d.achievements)); }
+    if (d.dailyQuests !== undefined) { updates.push('daily_quests = ?'); params.push(JSON.stringify(d.dailyQuests)); }
     if (d.daily_quests !== undefined) { updates.push('daily_quests = ?'); params.push(JSON.stringify(d.daily_quests)); }
+    if (d.dailyQuestDate !== undefined) { updates.push('daily_quest_date = ?'); params.push(d.dailyQuestDate); }
     if (d.daily_quest_date !== undefined) { updates.push('daily_quest_date = ?'); params.push(d.daily_quest_date); }
+    if (d.dailyQuestRealm !== undefined) { updates.push('daily_quest_realm = ?'); params.push(d.dailyQuestRealm); }
     if (d.daily_quest_realm !== undefined) { updates.push('daily_quest_realm = ?'); params.push(d.daily_quest_realm); }
-    if (d.ceremony_seen !== undefined) { updates.push('ceremony_seen = ?'); params.push(JSON.stringify(d.ceremony_seen)); }
-    if (d.bonus_done !== undefined) { updates.push('bonus_done = ?'); params.push(JSON.stringify(d.bonus_done)); }
+    if (d.ceremonySeen !== undefined) { updates.push('ceremony_seen = ?'); params.push(JSON.stringify(d.ceremonySeen)); }
+    if (d.bonusDone !== undefined) { updates.push('bonus_done = ?'); params.push(JSON.stringify(d.bonusDone)); }
 
     if (updates.length > 0) {
-      sql += updates.join(', ') + ' WHERE user_id = ?';
+      const sql = `UPDATE user_state SET ${updates.join(', ')} WHERE user_id = ?`;
       params.push(req.user.id);
       await runQuery(sql, params);
     }
@@ -198,13 +219,9 @@ app.post('/api/complete', authenticateToken, async (req, res) => {
     } else {
       await runQuery(`DELETE FROM completed_quests WHERE user_id = ? AND qid = ?`, [req.user.id, qid]);
     }
-    // Return mock calculations for streak/xp for simplicity (in a real app this logic would be in backend)
-    // Actually wait, earlier the backend returned newXp, inventory, etc.
-    // Wait, the previous server.js just returned `{ success: true }`. The frontend computes XP.
-    // Let me check my previous snapshot of server.js: Yes, `/api/complete` just did DB update and returned `{ success: true }`.
-    res.json({ ok: true });
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message, ok: false });
+    res.status(500).json({ error: err.message, success: false });
   }
 });
 
@@ -243,7 +260,9 @@ app.get('/api/codex', authenticateToken, async (req, res) => {
 // POST /api/codex
 app.post('/api/codex', authenticateToken, async (req, res) => {
   try {
-    const { id, qid, title, content, realm_id, realm_name, pattern, difficulty } = req.body;
+    const { id, qid, title, content, realm_id, realmId, realm_name, realmName, pattern, difficulty } = req.body;
+    const rid = realm_id || realmId;
+    const rname = realm_name || realmName;
     if (id) {
       await runQuery(`
         UPDATE codex_entries 
@@ -254,7 +273,7 @@ app.post('/api/codex', authenticateToken, async (req, res) => {
       await runQuery(`
         INSERT INTO codex_entries (user_id, qid, title, content, realm_id, realm_name, pattern, difficulty)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `, [req.user.id, qid, title, content, realm_id, realm_name, pattern, difficulty]);
+      `, [req.user.id, qid, title, content, rid, rname, pattern, difficulty]);
     }
     res.json({ success: true });
   } catch (err) {
