@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useGame } from '@/lib/gameStore';
+import { useGame, authFetch } from '@/lib/gameStore';
 
 interface CodexEntry { id: number; qid: string; title: string; content: string; realm_id: string; realm_name: string; pattern: string; difficulty: string; created_at: string; updated_at: string; }
 
@@ -15,7 +15,7 @@ export default function CodexPage() {
   const [editContent, setEditContent] = useState('');
 
   const load = async () => {
-    const res = await fetch('http://localhost:5000/api/codex');
+    const res = await authFetch('http://localhost:5000/api/codex');
     const { entries } = await res.json();
     setEntries(entries || []);
   };
@@ -26,21 +26,21 @@ export default function CodexPage() {
   const filtered = filter === 'all' ? entries : entries.filter(e => e.pattern === filter);
 
   const handleDelete = async (id: number) => {
-    await fetch('http://localhost:5000/api/codex', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+    await authFetch('http://localhost:5000/api/codex', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     showToast('Entry deleted', 'muted');
     load();
   };
 
   const handleCreate = async () => {
     if (!newTitle.trim()) return;
-    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
+    await authFetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
     showToast('📓 Entry created!', 'gold');
     setShowNew(false); setNewTitle(''); setNewContent('');
     load();
   };
 
   const handleEdit = async (e: CodexEntry) => {
-    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
+    await authFetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
     showToast('📓 Entry updated!', 'gold');
     setEditId(null); load();
   };

@@ -2,7 +2,7 @@
 import { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
 import { REALMS, LEVELS, ACHIEVEMENTS, getLevelInfo, getActiveRealm, REALM_PROGRESSION } from '@/lib/data';
 
-async function authFetch(url: string, options: RequestInit = {}) {
+export async function authFetch(url: string, options: RequestInit = {}) {
   const token = localStorage.getItem('auth_token');
   if (!token) {
     if (typeof window !== 'undefined') window.location.href = '/login';
@@ -161,8 +161,31 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const res = await authFetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'complete' }) });
     const data = await res.json();
     if (!data.ok) { showToast(data.error || 'Error', 'red'); return; }
-    dispatch({ type: 'COMPLETE_QUEST', qid, xpGained: data.xpGained, newXp: data.xp, streak: data.streak, bestStreak: data.bestStreak, inventory: data.inventory, achievements: data.achievements, newAchievements: data.newAchievements, realmCompleted: data.realmCompleted, activeRealm: data.activeRealm });
-    showToast(`⚔️ Quest Complete! +${data.xpGained} XP`, 'green');
+
+    let xpGained = 10;
+    let realmCompleted: string | null = null;
+    let foundRealm = null;
+    for (const r of REALMS) {
+       const q = r.questions.find(x => x.id === qid);
+       if (q) { foundRealm = { realm: r, q }; break; }
+    }
+    if (foundRealm) {
+       if (foundRealm.q.diff === 'Easy') xpGained = 10;
+       if (foundRealm.q.diff === 'Medium') xpGained = 20;
+       if (foundRealm.q.diff === 'Hard') xpGained = 30;
+       
+       const currentRealmTotal = foundRealm.realm.questions.length;
+       const currentRealmDone = foundRealm.realm.questions.filter(q => state.completed[q.id] || q.id === qid).length;
+       if (currentRealmDone === currentRealmTotal) {
+           realmCompleted = foundRealm.realm.id;
+       }
+    }
+    const newXp = (state.xp || 0) + xpGained;
+    
+    await authFetch('http://localhost:5000/api/state', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xp: newXp }) });
+    
+    dispatch({ type: 'COMPLETE_QUEST', qid, xpGained, newXp, streak: state.streak, bestStreak: state.bestStreak, inventory: state.inventory, achievements: state.achievements, newAchievements: [], realmCompleted, activeRealm: state.activeRealm });
+    showToast(`⚔️ Quest Complete! +${xpGained} XP`, 'green');
 
     // Show achievement popups sequentially
     if (data.newAchievements?.length > 0) {
@@ -201,7 +224,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const res = await authFetch('http://localhost:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid, action: 'uncomplete' }) });
     const data = await res.json();
     if (!data.ok) { showToast('Error', 'red'); return; }
-    dispatch({ type: 'UNCOMPLETE_QUEST', qid, newXp: data.xp, inventory: data.inventory });
+    
+    let xpLost = 10;
+    for (const r of REALMS) {
+       const q = r.questions.find(x => x.id === qid);
+       if (q) { 
+           if (q.diff === 'Easy') xpLost = 10;
+           if (q.diff === 'Medium') xpLost = 20;
+           if (q.diff === 'Hard') xpLost = 30;
+           break; 
+       }
+    }
+    const newXp = Math.max(0, (state.xp || 0) - xpLost);
+    
+    await authFetch('http://localhost:5000/api/state', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xp: newXp }) });
+
+    dispatch({ type: 'UNCOMPLETE_QUEST', qid, newXp, inventory: state.inventory });
     showToast('↩ Quest unmarked', 'muted');
   }
 
