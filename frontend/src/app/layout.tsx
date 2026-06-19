@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { GameProvider } from '@/lib/gameStore';
-import { ToastContainer } from '@/components/Toast';
 
 export const metadata: Metadata = {
   title: 'DSA Odyssey — Reclaim the Kingdom of Algorithms',

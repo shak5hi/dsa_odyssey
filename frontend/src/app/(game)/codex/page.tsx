@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useGame, authFetch } from '@/lib/gameStore';
+import { useGame } from '@/store/GameContext';
 
 interface CodexEntry { id: number; qid: string; title: string; content: string; realm_id: string; realm_name: string; pattern: string; difficulty: string; created_at: string; updated_at: string; }
 

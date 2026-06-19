@@ -1,11 +1,11 @@
-import { Sidebar } from '@/components/Sidebar';
-import { ParticlesCanvas } from '@/components/Particles';
-import { AchievementPopup } from '@/components/AchievementPopup';
-import { NotesModal } from '@/components/NotesModal';
-import { CodexModal } from '@/components/CodexModal';
-import { RealmCeremony } from '@/components/RealmCeremony';
-import { GameProvider } from '@/lib/gameStore';
-import { ToastContainer } from '@/components/Toast';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { ParticlesCanvas } from '@/components/animations/Particles';
+import { AchievementPopup } from '@/features/achievements/components/AchievementPopup';
+import { NotesModal } from '@/features/notes/components/NotesModal';
+import { CodexModal } from '@/features/notes/components/CodexModal';
+import { RealmCeremony } from '@/components/animations/RealmCeremony';
+import { GameProvider } from '@/store/GameContext';
+import { ToastContainer } from '@/components/ui/Toast';
 
 export default function GameLayout({ children }: { children: React.ReactNode }) {
   return (

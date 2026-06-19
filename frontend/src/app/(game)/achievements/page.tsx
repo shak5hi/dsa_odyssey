@@ -1,6 +1,6 @@
 'use client';
-import { useGame } from '@/lib/gameStore';
-import { ACHIEVEMENTS } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { ACHIEVEMENTS } from '@/constants/achievements';
 
 export default function AchievementsPage() {
   const { state } = useGame();

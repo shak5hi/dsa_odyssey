@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { useGame } from '@/lib/gameStore';
-import { REALMS, LORE_DB } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
+import { LORE_DB } from '@/constants/lore';
 
 export default function LibraryPage() {
   const { state } = useGame();

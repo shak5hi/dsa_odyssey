@@ -1,5 +1,5 @@
 'use client';
-import { useGame } from '@/lib/gameStore';
+import { useGame } from '@/store/GameContext';
 
 export function ToastContainer() {
   const { state } = useGame();

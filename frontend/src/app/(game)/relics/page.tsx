@@ -1,6 +1,6 @@
 'use client';
-import { useGame } from '@/lib/gameStore';
-import { REALMS } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
 
 const RELICS = [
   { id: 'iron_blade', icon: '🗡️', name: 'Iron Blade', unlockAt: 5, condition: (solved: number) => solved >= 5, desc: 'Forged after 5 quests conquered' },

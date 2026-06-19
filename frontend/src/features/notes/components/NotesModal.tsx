@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useGame } from '@/lib/gameStore';
-import { REALMS } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
 
 export function NotesModal() {
   const { state, dispatch, saveNote } = useGame();

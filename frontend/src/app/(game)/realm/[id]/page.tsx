@@ -1,6 +1,7 @@
 'use client';
-import { useGame } from '@/lib/gameStore';
-import { REALMS, getMasteryRank } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
+import { getMasteryRank } from '@/utils/xpCalculator';
 import Link from 'next/link';
 import { use } from 'react';
 

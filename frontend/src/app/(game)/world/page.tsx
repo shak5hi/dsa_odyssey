@@ -1,6 +1,6 @@
 'use client';
-import { useGame } from '@/lib/gameStore';
-import { REALMS } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
 import Link from 'next/link';
 
 export default function WorldPage() {

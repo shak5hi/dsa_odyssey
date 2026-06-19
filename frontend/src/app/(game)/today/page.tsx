@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { useGame } from '@/lib/gameStore';
-import { REALMS, REALM_PROGRESSION, getMasteryRank } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS, REALM_PROGRESSION } from '@/constants/realms';
+import { getMasteryRank } from '@/utils/xpCalculator';
 
 export default function TodayPage() {
   const { state, completeQuest, dispatch } = useGame();

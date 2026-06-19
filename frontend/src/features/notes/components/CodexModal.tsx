@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useGame } from '@/lib/gameStore';
+import { useGame } from '@/store/GameContext';
 
 export function CodexModal() {
   const { state, dispatch, addToCodex } = useGame();

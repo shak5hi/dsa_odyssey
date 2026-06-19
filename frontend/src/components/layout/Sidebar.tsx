@@ -2,8 +2,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useGame, getLevelInfo, LEVELS } from '@/lib/gameStore';
-import { REALMS, REALM_PROGRESSION } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS, REALM_PROGRESSION } from '@/constants/realms';
 
 const NAV_ITEMS = [
   { path: '/kingdom', label: 'Kingdom', icon: '🏰', view: 'home' },

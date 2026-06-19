@@ -1,6 +1,6 @@
 'use client';
-import { useGame, getLevelInfo, LEVELS } from '@/lib/gameStore';
-import { REALMS } from '@/lib/data';
+import { useGame } from '@/store/GameContext';
+import { REALMS } from '@/constants/realms';
 
 const TIERS = [
   { icon: '🌱', name: 'Foundation\nPhase', desc: 'Learn arrays, hashing, two pointers, binary search. Build your base.', solve: 0, xp: 0 },
