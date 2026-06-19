@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useGame } from '@/store/GameContext';
 
-interface CodexEntry { id: number; qid: string; title: string; content: string; realm_id: string; realm_name: string; pattern: string; difficulty: string; created_at: string; updated_at: string; }
+import { CodexEntryCard, CodexEntry } from '@/features/notes/components/CodexEntryCard';
 
 export default function CodexPage() {
   const { showToast } = useGame();
@@ -11,12 +11,10 @@ export default function CodexPage() {
   const [showNew, setShowNew] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
-  const [editId, setEditId] = useState<number | null>(null);
-  const [editContent, setEditContent] = useState('');
 
   const load = async () => {
     try {
-      const res = await authFetch('http://localhost:5000/api/codex');
+      const res = await fetch('http://localhost:5000/api/codex', { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
       if (!res.ok) return;
       const data = await res.json();
       setEntries(data.entries || []);
@@ -31,24 +29,23 @@ export default function CodexPage() {
   const filtered = filter === 'all' ? entries : entries.filter(e => e.pattern === filter);
 
   const handleDelete = async (id: number) => {
-    await authFetch(`http://localhost:5000/api/codex?id=${id}`, { method: 'DELETE' });
+    await fetch(`http://localhost:5000/api/codex?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
     showToast('Entry deleted', 'muted');
     load();
   };
 
-
   const handleCreate = async () => {
     if (!newTitle.trim()) return;
-    await authFetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
+    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
     showToast('📓 Entry created!', 'gold');
     setShowNew(false); setNewTitle(''); setNewContent('');
     load();
   };
 
-  const handleEdit = async (e: CodexEntry) => {
-    await authFetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
+  const handleEdit = async (e: CodexEntry, editContent: string) => {
+    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
     showToast('📓 Entry updated!', 'gold');
-    setEditId(null); load();
+    load();
   };
 
   return (
@@ -103,38 +100,7 @@ export default function CodexPage() {
           </p>
         </div>
       ) : filtered.map(e => (
-        <div key={e.id} className="codex-entry">
-          <div className="codex-entry-header">
-            <div>
-              <div className="codex-entry-name">{e.title}</div>
-              <div className="codex-entry-realm">{e.realm_name} · {e.pattern} · <span className={`diff-badge diff-${e.difficulty.toLowerCase()}`}>{e.difficulty}</span></div>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-              <button
-                onClick={() => { setEditId(e.id); setEditContent(e.content); }}
-                style={{ fontSize: 10, padding: '4px 10px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-faint)', cursor: 'pointer' }}>
-                ✏️ Edit
-              </button>
-              <button
-                onClick={() => handleDelete(e.id)}
-                style={{ fontSize: 10, padding: '4px 10px', border: '1px solid rgba(232,93,58,0.3)', background: 'transparent', color: 'var(--ember)', cursor: 'pointer' }}>
-                🗑️ Del
-              </button>
-            </div>
-          </div>
-          {editId === e.id ? (
-            <>
-              <textarea className="notes-textarea" rows={5} value={editContent} onChange={ev => setEditContent(ev.target.value)} style={{ marginBottom: 8 }} />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button className="btn-gold btn-sm" onClick={() => handleEdit(e)}>Save</button>
-                <button onClick={() => setEditId(null)} style={{ padding: '4px 12px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 10 }}>Cancel</button>
-              </div>
-            </>
-          ) : (
-            <div className="codex-entry-body">{e.content || <em style={{ color: 'var(--text-faint)' }}>No notes written yet.</em>}</div>
-          )}
-          <div className="codex-entry-date">Updated: {e.updated_at?.slice(0, 10) || '—'}</div>
-        </div>
+        <CodexEntryCard key={e.id} entry={e} onEdit={handleEdit} onDelete={handleDelete} />
       ))}
     </div>
   );

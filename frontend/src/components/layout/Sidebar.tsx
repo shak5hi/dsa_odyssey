@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useGame } from '@/store/GameContext';
+import { getLevelInfo } from '@/utils/xpCalculator';
+import { LEVELS } from '@/constants/tiers';
 import { REALMS, REALM_PROGRESSION } from '@/constants/realms';
 
 const NAV_ITEMS = [

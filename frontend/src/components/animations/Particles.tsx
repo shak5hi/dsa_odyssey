@@ -76,6 +76,7 @@ export function ParticlesCanvas() {
     let animId: number;
 
     function drawGrid() {
+      if (!ctx) return;
       const w = W(), h = H();
       ctx.strokeStyle = 'rgba(167,139,250,0.04)';
       ctx.lineWidth = 1;
@@ -98,6 +99,7 @@ export function ParticlesCanvas() {
     }
 
     function drawOrbs() {
+      if (!ctx) return;
       orbs.forEach(o => {
         const grad = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
         grad.addColorStop(0, o.color);
@@ -114,6 +116,7 @@ export function ParticlesCanvas() {
     }
 
     function drawStars() {
+      if (!ctx) return;
       stars.forEach(s => {
         s.pulse += s.pulseSpeed;
         const a = s.alpha * (0.5 + 0.5 * Math.sin(s.pulse));
@@ -139,6 +142,7 @@ export function ParticlesCanvas() {
     }
 
     function drawRunes() {
+      if (!ctx) return;
       ctx.fontKerning = 'none';
       runes.forEach(r => {
         r.y -= r.speed;
@@ -158,6 +162,7 @@ export function ParticlesCanvas() {
     // Shooting star occasionally
     let shootStar = { x: -100, y: -100, vx: 0, vy: 0, life: 0, maxLife: 0, active: false };
     function maybeShootStar() {
+      if (!ctx) return;
       if (!shootStar.active && Math.random() < 0.004) {
         const startX = Math.random() * W() * 0.7;
         shootStar = {
@@ -185,6 +190,7 @@ export function ParticlesCanvas() {
     }
 
     function draw() {
+      if (!ctx) return;
       const w = W(), h = H();
       ctx.clearRect(0, 0, w, h);
       frame++;

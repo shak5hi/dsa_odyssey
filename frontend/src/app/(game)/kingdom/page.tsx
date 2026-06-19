@@ -1,12 +1,15 @@
 'use client';
 import { useGame } from '@/store/GameContext';
+import { getLevelInfo } from '@/utils/xpCalculator';
+import { LEVELS } from '@/constants/tiers';
 import { REALMS } from '@/constants/realms';
 import Link from 'next/link';
+
+import { StatsBar } from '@/features/dashboard/components/StatsBar';
 
 export default function HomePage() {
   const { state } = useGame();
   const solved = Object.keys(state.completed).length;
-  const patterns = state.inventory.length;
 
   // Campaign progress
   const month = Math.min(4, Math.ceil((solved + 1) / 60));
@@ -41,25 +44,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* Stats Bar */}
-      <div className="stats-bar">
-        <div className="stat-card">
-          <div className="stat-num">{solved}</div>
-          <div className="stat-lbl">Quests Solved</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-num">{state.xp}</div>
-          <div className="stat-lbl">Total XP</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-num">{state.streak}</div>
-          <div className="stat-lbl">Day Streak</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-num">{patterns}</div>
-          <div className="stat-lbl">Patterns Mastered</div>
-        </div>
-      </div>
+      <StatsBar />
 
       <div className="dashboard-2col">
         {/* Campaign */}

@@ -1,5 +1,7 @@
 'use client';
 import { useGame } from '@/store/GameContext';
+import { getLevelInfo } from '@/utils/xpCalculator';
+import { LEVELS } from '@/constants/tiers';
 import { REALMS } from '@/constants/realms';
 
 const TIERS = [
