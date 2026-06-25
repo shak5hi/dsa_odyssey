@@ -23,3 +23,6 @@ backend/data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Interview Prep Document (ignored from public repo)
+/interview_prep.md
