@@ -17,10 +17,26 @@ export interface CodexModalState {
   difficulty: string;
 }
 
+export interface FeedbackModalState {
+  qid: string;
+  questName: string;
+  realmName: string;
+}
+
 export interface AchievementPopup {
   icon: string;
   name: string;
   desc: string;
+}
+
+/** Per-realm aggregated struggle data computed from felt ratings */
+export interface RealmInsight {
+  hardCount: number;
+  easyCount: number;
+  mediumCount: number;
+  total: number;
+  /** 0–1, higher = struggling more */
+  struggleScore: number;
 }
 
 export interface GameState {
@@ -41,6 +57,11 @@ export interface GameState {
   toasts: Toast[];
   modal: ModalState | null;
   codexModal: CodexModalState | null;
+  feedbackModal: FeedbackModalState | null;
   ceremonyRealm: string | null;
   achievementPopup: AchievementPopup | null;
+  /** Per-question felt rating: 'easy' | 'medium' | 'hard' */
+  felt: Record<string, 'easy' | 'medium' | 'hard'>;
+  /** Per-realm aggregated insight data */
+  insights: Record<string, RealmInsight>;
 }

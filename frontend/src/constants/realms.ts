@@ -17,6 +17,11 @@ export const REALMS: Realm[] = [
       { id: 'a8', name: 'Search in Rotated Sorted Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/search-in-rotated-sorted-array/' },
       { id: 'a9', name: '3Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/3sum/' },
       { id: 'a10', name: 'Container With Most Water', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/container-with-most-water/' },
+      { id: 'a11', name: 'Move Zeroes', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/move-zeroes/' },
+      { id: 'a12', name: 'Rotate Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/rotate-array/' },
+      { id: 'a13', name: 'Next Permutation', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/next-permutation/' },
+      { id: 'a14', name: 'Majority Element', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/majority-element/' },
+      { id: 'a15', name: 'Pascal\'s Triangle', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/pascals-triangle/' },
     ]
   },
   {
@@ -33,6 +38,10 @@ export const REALMS: Realm[] = [
       { id: 'h6', name: 'Valid Sudoku', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/valid-sudoku/' },
       { id: 'h7', name: 'Subarray Sum Equals K', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/subarray-sum-equals-k/' },
       { id: 'h8', name: 'Two Sum II - Input Array Is Sorted', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/' },
+      { id: 'h9', name: 'Ransom Note', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/ransom-note/' },
+      { id: 'h10', name: 'Isomorphic Strings', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/isomorphic-strings/' },
+      { id: 'h11', name: 'Word Pattern', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/word-pattern/' },
+      { id: 'h12', name: 'Find All Anagrams in a String', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/find-all-anagrams-in-a-string/' },
     ]
   },
   {
@@ -48,6 +57,11 @@ export const REALMS: Realm[] = [
       { id: 'tp5', name: 'Trapping Rain Water', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/trapping-rain-water/' },
       { id: 'tp6', name: 'Boats to Save People', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/boats-to-save-people/' },
       { id: 'tp7', name: 'Sort Colors', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/sort-colors/' },
+      { id: 'tp8', name: 'Remove Duplicates from Sorted Array', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/remove-duplicates-from-sorted-array/' },
+      { id: 'tp9', name: 'Remove Element', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/remove-element/' },
+      { id: 'tp10', name: '4Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/4sum/' },
+      { id: 'tp11', name: 'Squares of a Sorted Array', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/squares-of-a-sorted-array/' },
+      { id: 'tp12', name: 'Minimum Size Subarray Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/minimum-size-subarray-sum/' },
     ]
   },
   {
@@ -64,6 +78,9 @@ export const REALMS: Realm[] = [
       { id: 'sw6', name: 'Sliding Window Maximum', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/sliding-window-maximum/' },
       { id: 'sw7', name: 'Max Consecutive Ones III', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/max-consecutive-ones-iii/' },
       { id: 'sw8', name: 'Fruit Into Baskets', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/fruit-into-baskets/' },
+      { id: 'sw9', name: 'Minimum Size Subarray Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/minimum-size-subarray-sum/' },
+      { id: 'sw10', name: 'Maximum Average Subarray I', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/maximum-average-subarray-i/' },
+      { id: 'sw11', name: 'Substring with Concatenation of All Words', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/substring-with-concatenation-of-all-words/' },
     ]
   },
   {
@@ -78,6 +95,9 @@ export const REALMS: Realm[] = [
       { id: 'px4', name: 'Subarray Sum Equals K', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/subarray-sum-equals-k/' },
       { id: 'px5', name: 'Product of Array Except Self', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/product-of-array-except-self/' },
       { id: 'px6', name: 'Count Number of Nice Subarrays', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/count-number-of-nice-subarrays/' },
+      { id: 'px7', name: 'Number of Ways to Split Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/number-of-ways-to-split-array/' },
+      { id: 'px8', name: 'Maximum Size Subarray Sum Equals k', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/maximum-size-subarray-sum-equals-k/' },
+      { id: 'px9', name: 'Contiguous Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/contiguous-array/' },
     ]
   },
   {
@@ -94,6 +114,10 @@ export const REALMS: Realm[] = [
       { id: 'bs6', name: 'Search a 2D Matrix', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/search-a-2d-matrix/' },
       { id: 'bs7', name: 'Median of Two Sorted Arrays', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/median-of-two-sorted-arrays/' },
       { id: 'bs8', name: 'Time Based Key-Value Store', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/time-based-key-value-store/' },
+      { id: 'bs9', name: 'Find First and Last Position of Element in Sorted Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/' },
+      { id: 'bs10', name: 'Split Array Largest Sum', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/split-array-largest-sum/' },
+      { id: 'bs11', name: 'Capacity To Ship Packages Within D Days', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/' },
+      { id: 'bs12', name: 'Aggressive Cows (Search on Answer)', diff: 'Medium', xp: 15, url: 'https://www.geeksforgeeks.org/aggressive-cows-problem/' },
     ]
   },
   {
@@ -113,6 +137,9 @@ export const REALMS: Realm[] = [
       { id: 'll9', name: 'LRU Cache', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/lru-cache/' },
       { id: 'll10', name: 'Merge K Sorted Lists', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/merge-k-sorted-lists/' },
       { id: 'll11', name: 'Reverse Nodes in k-Group', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/reverse-nodes-in-k-group/' },
+      { id: 'll12', name: 'Middle of the Linked List', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/middle-of-the-linked-list/' },
+      { id: 'll13', name: 'Palindrome Linked List', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/palindrome-linked-list/' },
+      { id: 'll14', name: 'Intersection of Two Linked Lists', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/intersection-of-two-linked-lists/' },
     ]
   },
   {
@@ -129,6 +156,9 @@ export const REALMS: Realm[] = [
       { id: 'st6', name: 'Car Fleet', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/car-fleet/' },
       { id: 'st7', name: 'Largest Rectangle in Histogram', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/largest-rectangle-in-histogram/' },
       { id: 'st8', name: 'Basic Calculator', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/basic-calculator/' },
+      { id: 'st9', name: 'Next Greater Element I', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/next-greater-element-i/' },
+      { id: 'st10', name: 'Next Greater Element II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/next-greater-element-ii/' },
+      { id: 'st11', name: 'Asteroid Collision', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/asteroid-collision/' },
     ]
   },
   {
@@ -145,6 +175,8 @@ export const REALMS: Realm[] = [
       { id: 'hp6', name: 'Design Twitter', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/design-twitter/' },
       { id: 'hp7', name: 'Find Median from Data Stream', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/find-median-from-data-stream/' },
       { id: 'hp8', name: 'Merge K Sorted Lists', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/merge-k-sorted-lists/' },
+      { id: 'hp9', name: 'Top K Frequent Words', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/top-k-frequent-words/' },
+      { id: 'hp10', name: 'Smallest Range Covering Elements from K Lists', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/' },
     ]
   },
   {
@@ -163,6 +195,8 @@ export const REALMS: Realm[] = [
       { id: 'bt8', name: 'Letter Combinations of a Phone Number', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/letter-combinations-of-a-phone-number/' },
       { id: 'bt9', name: 'N-Queens', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/n-queens/' },
       { id: 'bt10', name: 'Sudoku Solver', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/sudoku-solver/' },
+      { id: 'bt11', name: 'Combination Sum III', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/combination-sum-iii/' },
+      { id: 'bt12', name: 'Restore IP Addresses', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/restore-ip-addresses/' },
     ]
   },
   {
@@ -186,6 +220,8 @@ export const REALMS: Realm[] = [
       { id: 'tr13', name: 'Construct Binary Tree from Preorder and Inorder Traversal', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/' },
       { id: 'tr14', name: 'Binary Tree Maximum Path Sum', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/binary-tree-maximum-path-sum/' },
       { id: 'tr15', name: 'Serialize and Deserialize Binary Tree', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/serialize-and-deserialize-binary-tree/' },
+      { id: 'tr16', name: 'Binary Tree Zigzag Level Order Traversal', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/' },
+      { id: 'tr17', name: 'Populating Next Right Pointers in Each Node', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/populating-next-right-pointers-in-each-node/' },
     ]
   },
   {
@@ -200,6 +236,8 @@ export const REALMS: Realm[] = [
       { id: 'bst4', name: 'Validate Binary Search Tree', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/validate-binary-search-tree/' },
       { id: 'bst5', name: 'Kth Smallest Element in BST', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/kth-smallest-element-in-a-bst/' },
       { id: 'bst6', name: 'Lowest Common Ancestor of Binary Tree', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/' },
+      { id: 'bst7', name: 'Convert Sorted Array to Binary Search Tree', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/' },
+      { id: 'bst8', name: 'Balance a Binary Search Tree', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/balance-a-binary-search-tree/' },
     ]
   },
   {
@@ -219,6 +257,8 @@ export const REALMS: Realm[] = [
       { id: 'df9', name: 'Course Schedule II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/course-schedule-ii/' },
       { id: 'df10', name: 'Redundant Connection', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/redundant-connection/' },
       { id: 'df11', name: 'Word Ladder', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/word-ladder/' },
+      { id: 'df12', name: 'Alien Dictionary', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/alien-dictionary/' },
+      { id: 'df13', name: 'Network Delay Time', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/network-delay-time/' },
     ]
   },
   {
@@ -234,6 +274,8 @@ export const REALMS: Realm[] = [
       { id: 'bf5', name: 'Nearest Exit from Entrance in Maze', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/' },
       { id: 'bf6', name: 'Snakes and Ladders', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/snakes-and-ladders/' },
       { id: 'bf7', name: 'Open the Lock', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/open-the-lock/' },
+      { id: 'bf8', name: 'Jump Game III', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/jump-game-iii/' },
+      { id: 'bf9', name: 'Cheapest Flights Within K Stops', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/cheapest-flights-within-k-stops/' },
     ]
   },
   {
@@ -246,6 +288,27 @@ export const REALMS: Realm[] = [
       { id: 'ds2', name: 'Redundant Connection', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/redundant-connection/' },
       { id: 'ds3', name: 'Graph Valid Tree', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/graph-valid-tree/' },
       { id: 'ds4', name: 'Accounts Merge', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/accounts-merge/' },
+      { id: 'ds5', name: 'Number of Provinces', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/number-of-provinces/' },
+      { id: 'ds6', name: 'Regions Cut By Slashes', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/regions-cut-by-slashes/' },
+    ]
+  },
+  {
+    id: 'greedy', name: 'Fortune Bazaar', icon: '💰', pattern: 'Greedy',
+    color: '#fbbf24', group: 'Graph Realm', month: 3,
+    artifact: { icon: '🎪', name: 'Fortune Dice', desc: 'Always picks the locally best trade, which wins the world' },
+    lore: 'A bazaar of endless trades — the greedy merchant who always takes the best deal now wins in the end.',
+    questions: [
+      { id: 'gr1', name: 'Jump Game', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/jump-game/' },
+      { id: 'gr2', name: 'Jump Game II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/jump-game-ii/' },
+      { id: 'gr3', name: 'Gas Station', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/gas-station/' },
+      { id: 'gr4', name: 'Hand of Straights', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/hand-of-straights/' },
+      { id: 'gr5', name: 'Merge Triplets to Form Target Triplet', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/merge-triplets-to-form-target-triplet/' },
+      { id: 'gr6', name: 'Partition Labels', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/partition-labels/' },
+      { id: 'gr7', name: 'Valid Parenthesis String', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/valid-parenthesis-string/' },
+      { id: 'gr8', name: 'Non-overlapping Intervals', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/non-overlapping-intervals/' },
+      { id: 'gr9', name: 'Meeting Rooms II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/meeting-rooms-ii/' },
+      { id: 'gr10', name: 'Candy', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/candy/' },
+      { id: 'gr11', name: 'Minimum Number of Arrows to Burst Balloons', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/' },
     ]
   },
   {
@@ -266,6 +329,8 @@ export const REALMS: Realm[] = [
       { id: 'dp1j', name: 'Word Break', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/word-break/' },
       { id: 'dp1k', name: 'Longest Increasing Subsequence', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/longest-increasing-subsequence/' },
       { id: 'dp1l', name: 'Partition Equal Subset Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/partition-equal-subset-sum/' },
+      { id: 'dp1m', name: 'Number of Longest Increasing Subsequence', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/number-of-longest-increasing-subsequence/' },
+      { id: 'dp1n', name: 'Minimum Path Sum', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/minimum-path-sum/' },
     ]
   },
   {
@@ -285,6 +350,41 @@ export const REALMS: Realm[] = [
       { id: 'dp2i', name: 'Edit Distance', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/edit-distance/' },
       { id: 'dp2j', name: 'Burst Balloons', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/burst-balloons/' },
       { id: 'dp2k', name: 'Regular Expression Matching', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/regular-expression-matching/' },
+      { id: 'dp2l', name: 'Unique Paths II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/unique-paths-ii/' },
+      { id: 'dp2m', name: 'Triangle', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/triangle/' },
+    ]
+  },
+  {
+    id: 'trie', name: 'Whispering Spire', icon: '🗼', pattern: 'Trie',
+    color: '#4ade80', group: 'DP Citadel', month: 4,
+    artifact: { icon: '🔑', name: 'Prefix Key', desc: 'Unlocks any word by walking character by character' },
+    lore: 'A towering spire where every word is etched letter by letter — shared paths, split at each branch.',
+    questions: [
+      { id: 'tr_1', name: 'Implement Trie (Prefix Tree)', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/implement-trie-prefix-tree/' },
+      { id: 'tr_2', name: 'Design Add and Search Words Data Structure', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/design-add-and-search-words-data-structure/' },
+      { id: 'tr_3', name: 'Word Search II', diff: 'Hard', xp: 30, url: 'https://leetcode.com/problems/word-search-ii/' },
+      { id: 'tr_4', name: 'Replace Words', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/replace-words/' },
+      { id: 'tr_5', name: 'Search Suggestions System', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/search-suggestions-system/' },
+      { id: 'tr_6', name: 'Maximum XOR of Two Numbers in an Array', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/' },
+      { id: 'tr_7', name: 'Implement Magic Dictionary', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/implement-magic-dictionary/' },
+    ]
+  },
+  {
+    id: 'bitmanip', name: 'Binary Forge', icon: '⚡', pattern: 'Bit Manipulation',
+    color: '#a78bfa', group: 'DP Citadel', month: 4,
+    artifact: { icon: '🔩', name: 'XOR Wrench', desc: 'Cancels duplicates and reveals hidden structure with a single gate' },
+    lore: 'A forge where numbers are stripped to their essence — raw bits that encode the truth beneath the surface.',
+    questions: [
+      { id: 'bm1', name: 'Single Number', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/single-number/' },
+      { id: 'bm2', name: 'Number of 1 Bits', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/number-of-1-bits/' },
+      { id: 'bm3', name: 'Counting Bits', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/counting-bits/' },
+      { id: 'bm4', name: 'Reverse Bits', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/reverse-bits/' },
+      { id: 'bm5', name: 'Missing Number', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/missing-number/' },
+      { id: 'bm6', name: 'Sum of Two Integers', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/sum-of-two-integers/' },
+      { id: 'bm7', name: 'Reverse Integer', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/reverse-integer/' },
+      { id: 'bm8', name: 'Power of Two', diff: 'Easy', xp: 5, url: 'https://leetcode.com/problems/power-of-two/' },
+      { id: 'bm9', name: 'Subsets (Bitmask approach)', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/subsets/' },
+      { id: 'bm10', name: 'Single Number II', diff: 'Medium', xp: 15, url: 'https://leetcode.com/problems/single-number-ii/' },
     ]
   },
 ];
@@ -292,6 +392,6 @@ export const REALMS: Realm[] = [
 export const REALM_PROGRESSION = [
   'arrays', 'hashing', 'twoptr', 'sliding', 'prefix', 'bsearch',
   'linked', 'stack', 'heap', 'backtrack',
-  'trees', 'bst', 'dfs', 'bfs', 'dsu',
-  'dp1', 'dp2',
+  'trees', 'bst', 'dfs', 'bfs', 'dsu', 'greedy',
+  'dp1', 'dp2', 'trie', 'bitmanip',
 ];

@@ -6,6 +6,7 @@ import { CodexModal } from '@/features/notes/components/CodexModal';
 import { RealmCeremony } from '@/components/animations/RealmCeremony';
 import { GameProvider } from '@/store/GameContext';
 import { ToastContainer } from '@/components/ui/Toast';
+import { FeedbackModal } from '@/features/dashboard/components/FeedbackModal';
 
 export default function GameLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +21,7 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
         <NotesModal />
         <CodexModal />
         <RealmCeremony />
+        <FeedbackModal />
         <ToastContainer />
       </div>
     </GameProvider>

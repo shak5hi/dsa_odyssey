@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { path: '/kingdom', label: 'Kingdom', icon: '🏰', view: 'home' },
   { path: '/today', label: "Today's Quest", icon: '⚔️', view: 'today', badge: true },
   { path: '/world', label: 'World Map', icon: '🗺️', view: 'world' },
+  { path: '/practice', label: 'Smart Practice', icon: '🧠', view: 'practice' },
   { path: '/inventory', label: 'Inventory', icon: '🎒', view: 'inventory' },
   { path: '/achievements', label: 'Achievements', icon: '🏆', view: 'achievements' },
   { path: '/readiness', label: 'Readiness', icon: '📊', view: 'readiness' },

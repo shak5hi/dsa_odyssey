@@ -1,4 +1,4 @@
-import { GameState, Toast, ModalState, CodexModalState, AchievementPopup } from '../types/GameState';
+import { GameState, Toast, ModalState, CodexModalState, AchievementPopup, FeedbackModalState, RealmInsight } from '../types/GameState';
 
 export type Action =
   | { type: 'LOAD'; payload: Partial<GameState> }
@@ -12,6 +12,10 @@ export type Action =
   | { type: 'CLOSE_MODAL' }
   | { type: 'OPEN_CODEX_MODAL'; payload: CodexModalState }
   | { type: 'CLOSE_CODEX_MODAL' }
+  | { type: 'OPEN_FEEDBACK_MODAL'; payload: FeedbackModalState }
+  | { type: 'CLOSE_FEEDBACK_MODAL' }
+  | { type: 'SAVE_FELT'; qid: string; felt: 'easy' | 'medium' | 'hard' }
+  | { type: 'LOAD_INSIGHTS'; insights: Record<string, RealmInsight> }
   | { type: 'SHOW_CEREMONY'; realmId: string }
   | { type: 'CLOSE_CEREMONY' }
   | { type: 'SET_ACHIEVEMENT_POPUP'; payload: AchievementPopup | null }
@@ -22,7 +26,9 @@ export const initialState: GameState = {
   inventory: [], achievements: {}, ceremonySeen: {}, bonusDone: {},
   completed: {}, notes: {}, activeRealm: 'arrays',
   dailyQuests: [], astraMsg: '', loaded: false,
-  toasts: [], modal: null, codexModal: null, ceremonyRealm: null, achievementPopup: null,
+  toasts: [], modal: null, codexModal: null, feedbackModal: null,
+  ceremonyRealm: null, achievementPopup: null,
+  felt: {}, insights: {},
 };
 
 export function gameReducer(state: GameState, action: Action): GameState {
@@ -48,6 +54,10 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case 'CLOSE_MODAL': return { ...state, modal: null };
     case 'OPEN_CODEX_MODAL': return { ...state, codexModal: action.payload };
     case 'CLOSE_CODEX_MODAL': return { ...state, codexModal: null };
+    case 'OPEN_FEEDBACK_MODAL': return { ...state, feedbackModal: action.payload };
+    case 'CLOSE_FEEDBACK_MODAL': return { ...state, feedbackModal: null };
+    case 'SAVE_FELT': return { ...state, felt: { ...state.felt, [action.qid]: action.felt } };
+    case 'LOAD_INSIGHTS': return { ...state, insights: action.insights };
     case 'SHOW_CEREMONY': return { ...state, ceremonyRealm: action.realmId };
     case 'CLOSE_CEREMONY': return { ...state, ceremonyRealm: null };
     case 'SET_ACHIEVEMENT_POPUP': return { ...state, achievementPopup: action.payload };

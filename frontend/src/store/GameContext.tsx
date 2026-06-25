@@ -1,12 +1,14 @@
 'use client';
 import { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
-import { GameState, Toast } from '../types/GameState';
+import { GameState, Toast, RealmInsight } from '../types/GameState';
 import { gameReducer, initialState, Action } from './gameReducer';
 import { REALMS, REALM_PROGRESSION } from '../constants/realms';
 import { getActiveRealm } from '../utils/xpCalculator';
 import { gameStateService } from '../services/gameStateService';
 import { questService } from '../services/questService';
 import { noteService } from '../services/noteService';
+import { feedbackService } from '../services/feedbackService';
+import { computeInsights, selectAdaptiveDailyQuests } from '../constants/insights';
 
 const GameCtx = createContext<{
   state: GameState;
@@ -15,6 +17,7 @@ const GameCtx = createContext<{
   uncompleteQuest: (qid: string) => Promise<void>;
   saveNote: (qid: string, notes: string) => Promise<void>;
   addToCodex: (qid: string, content: string) => Promise<void>;
+  saveFelt: (qid: string, felt: 'easy' | 'medium' | 'hard') => Promise<void>;
   showToast: (msg: string, type?: Toast['type']) => void;
 }>(null!);
 
@@ -30,24 +33,39 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function load() {
       try {
-        const data = await gameStateService.getState();
+        // Load game state and insights in parallel
+        const [data, insightsData] = await Promise.all([
+          gameStateService.getState(),
+          feedbackService.getInsights().catch(() => ({ felt: {} })),
+        ]);
+
         if (data.error) { console.error('State load error:', data.error); return; }
 
         const completed = data.completed || {};
         const activeRealm = getActiveRealm(completed) || data.dailyQuestRealm || 'arrays';
-        
+
+        // Compute insights from felt ratings
+        const feltMap = (insightsData.felt || {}) as Record<string, 'easy' | 'medium' | 'hard'>;
+        const insights = computeInsights(feltMap);
+
         const todayStr = new Date().toISOString().slice(0, 10);
         let dailyQuests: string[] = data.dailyQuests || [];
 
         if (data.dailyQuestDate !== todayStr || dailyQuests.length === 0) {
-          const realm = REALMS.find(r => r.id === activeRealm) || REALMS[0];
-          const completedIds = Object.keys(completed);
-          const available = realm.questions.filter(q => !completedIds.includes(q.id));
-          dailyQuests = available.sort(() => 0.5 - Math.random()).slice(0, 3).map(q => q.id);
-          
+          // Use adaptive selection if we have insight data, otherwise fall back to random
+          const hasInsights = Object.values(insights).some((ins: RealmInsight) => ins.total > 0);
+          if (hasInsights) {
+            dailyQuests = selectAdaptiveDailyQuests(activeRealm, completed, insights);
+          } else {
+            const realm = REALMS.find(r => r.id === activeRealm) || REALMS[0];
+            const completedIds = Object.keys(completed);
+            const available = realm.questions.filter(q => !completedIds.includes(q.id));
+            dailyQuests = available.sort(() => 0.5 - Math.random()).slice(0, 3).map(q => q.id);
+          }
           gameStateService.updateState({ dailyQuests, dailyQuestDate: todayStr, dailyQuestRealm: activeRealm }).catch(() => {});
         }
 
+        dispatch({ type: 'LOAD_INSIGHTS', insights });
         dispatch({
           type: 'LOAD',
           payload: {
@@ -63,6 +81,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
             notes: data.notes || {},
             activeRealm,
             dailyQuests,
+            felt: feltMap,
           },
         });
       } catch (err) {
@@ -89,7 +108,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
     let realmCompleted: string | null = null;
     let newActiveRealm = state.activeRealm;
-    
+
     if (foundRealm) {
       const doneAfter = foundRealm.realm.questions.filter(
         q => state.completed[q.id] || q.id === qid
@@ -113,6 +132,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
 
     if (foundRealm) {
+      // Codex modal at 1.2s
       setTimeout(() => {
         dispatch({
           type: 'OPEN_CODEX_MODAL',
@@ -126,6 +146,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
           },
         });
       }, 1200);
+
+      // Feedback modal at 2.5s (after codex is dismissed or alongside it)
+      setTimeout(() => {
+        dispatch({
+          type: 'OPEN_FEEDBACK_MODAL',
+          payload: {
+            qid,
+            questName: foundRealm!.q.name,
+            realmName: foundRealm!.realm.name,
+          },
+        });
+      }, 2500);
     }
   }, [state.completed, state.ceremonySeen, state.activeRealm, showToast]);
 
@@ -149,7 +181,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (q) { foundRealm = { realm, q }; break; }
     }
     if (!foundRealm) return;
-    
+
     await noteService.saveCodexEntry({
       qid,
       title: foundRealm.q.name,
@@ -162,8 +194,26 @@ export function GameProvider({ children }: { children: ReactNode }) {
     showToast('📓 Added to Codex!', 'gold');
   }, [showToast]);
 
+  const saveFelt = useCallback(async (qid: string, felt: 'easy' | 'medium' | 'hard') => {
+    try {
+      await feedbackService.saveFelt(qid, felt);
+      dispatch({ type: 'SAVE_FELT', qid, felt });
+      dispatch({ type: 'CLOSE_FEEDBACK_MODAL' });
+
+      // Recompute insights with the new rating
+      const newFelt = { ...state.felt, [qid]: felt };
+      const newInsights = computeInsights(newFelt);
+      dispatch({ type: 'LOAD_INSIGHTS', insights: newInsights });
+
+      const msg = felt === 'hard' ? '🔥 Noted — we\'ll drill this more!' : felt === 'easy' ? '⚡ Great — pushing you forward!' : '✅ Feedback saved!';
+      showToast(msg, felt === 'hard' ? 'red' : felt === 'easy' ? 'green' : 'gold');
+    } catch (err) {
+      dispatch({ type: 'CLOSE_FEEDBACK_MODAL' });
+    }
+  }, [state.felt, showToast]);
+
   return (
-    <GameCtx.Provider value={{ state, dispatch, completeQuest, uncompleteQuest, saveNote, addToCodex, showToast }}>
+    <GameCtx.Provider value={{ state, dispatch, completeQuest, uncompleteQuest, saveNote, addToCodex, saveFelt, showToast }}>
       {children}
     </GameCtx.Provider>
   );
