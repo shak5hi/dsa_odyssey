@@ -28,6 +28,20 @@ class QuestRepository {
       [userId]
     );
   }
+
+  async saveFelt(userId, qid, felt) {
+    return runQuery(
+      `UPDATE completed_quests SET felt = ? WHERE user_id = ? AND qid = ?`,
+      [felt, userId, qid]
+    );
+  }
+
+  async getInsights(userId) {
+    return getRows(
+      `SELECT qid, felt FROM completed_quests WHERE user_id = ? AND felt != ''`,
+      [userId]
+    );
+  }
 }
 
 module.exports = new QuestRepository();

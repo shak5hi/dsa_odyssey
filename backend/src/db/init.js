@@ -29,8 +29,14 @@ function initializeDatabase() {
       qid TEXT NOT NULL,
       completed_at TEXT DEFAULT (date('now')),
       notes TEXT DEFAULT '',
+      felt TEXT DEFAULT '',
       PRIMARY KEY (user_id, qid)
     )`);
+
+    // Migration: add felt column if it doesn't exist (for existing DBs)
+    db.run(`ALTER TABLE completed_quests ADD COLUMN felt TEXT DEFAULT ''`, [], (err) => {
+      // Ignore error if column already exists
+    });
     db.run(`CREATE TABLE IF NOT EXISTS codex_entries (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
