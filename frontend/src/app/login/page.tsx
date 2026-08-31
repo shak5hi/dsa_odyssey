@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '@/app/globals.css';
 import './login.css';
+import { API_BASE_URL } from '@/config/api';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,7 +27,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    const url = isLogin ? 'http://localhost:5000/api/login' : 'http://localhost:5000/api/register';
+    const url = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/register`;
 
     try {
       const res = await fetch(url, {

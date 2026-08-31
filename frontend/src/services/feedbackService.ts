@@ -1,8 +1,9 @@
 import { authFetch } from './api/apiClient';
+import { API_BASE_URL } from '@/config/api';
 
 export const feedbackService = {
   async saveFelt(qid: string, felt: 'easy' | 'medium' | 'hard') {
-    const res = await authFetch('http://localhost:5000/api/feedback', {
+    const res = await authFetch(`${API_BASE_URL}/feedback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ qid, felt }),
@@ -11,7 +12,7 @@ export const feedbackService = {
   },
 
   async getInsights(): Promise<{ felt: Record<string, 'easy' | 'medium' | 'hard'> }> {
-    const res = await authFetch('http://localhost:5000/api/insights');
+    const res = await authFetch(`${API_BASE_URL}/insights`);
     return res.json();
   },
 };

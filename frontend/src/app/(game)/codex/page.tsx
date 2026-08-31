@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useGame } from '@/store/GameContext';
+import { API_BASE_URL } from '@/config/api';
 
 import { CodexEntryCard, CodexEntry } from '@/features/notes/components/CodexEntryCard';
 
@@ -14,7 +15,7 @@ export default function CodexPage() {
 
   const load = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/codex', { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
+      const res = await fetch(`${API_BASE_URL}/codex`, { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
       if (!res.ok) return;
       const data = await res.json();
       setEntries(data.entries || []);
@@ -29,21 +30,21 @@ export default function CodexPage() {
   const filtered = filter === 'all' ? entries : entries.filter(e => e.pattern === filter);
 
   const handleDelete = async (id: number) => {
-    await fetch(`http://localhost:5000/api/codex?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
+    await fetch(`${API_BASE_URL}/codex?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } });
     showToast('Entry deleted', 'muted');
     load();
   };
 
   const handleCreate = async () => {
     if (!newTitle.trim()) return;
-    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
+    await fetch(`${API_BASE_URL}/codex`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: `manual-${Date.now()}`, title: newTitle, content: newContent, realmId: 'manual', realmName: 'Custom', pattern: 'Custom Note', difficulty: 'N/A' }) });
     showToast('📓 Entry created!', 'gold');
     setShowNew(false); setNewTitle(''); setNewContent('');
     load();
   };
 
   const handleEdit = async (e: CodexEntry, editContent: string) => {
-    await fetch('http://localhost:5000/api/codex', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
+    await fetch(`${API_BASE_URL}/codex`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` }, body: JSON.stringify({ qid: e.qid, title: e.title, content: editContent, realmId: e.realm_id, realmName: e.realm_name, pattern: e.pattern, difficulty: e.difficulty }) });
     showToast('📓 Entry updated!', 'gold');
     load();
   };
