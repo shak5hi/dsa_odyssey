@@ -37,6 +37,23 @@ class AuthController {
       res.status(500).json({ error: err.message });
     }
   }
+
+  async resetPassword(req, res) {
+    try {
+      const { username, newPassword } = req.body;
+      if (!username || !newPassword) return res.status(400).json({ error: 'Username and new password required' });
+      
+      const user = await userRepository.getUserByUsername(username);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      
+      const hash = await bcrypt.hash(newPassword, 10);
+      await userRepository.updatePassword(username, hash);
+      
+      res.json({ success: true, message: 'Password reset successful' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = new AuthController();

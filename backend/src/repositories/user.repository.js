@@ -11,6 +11,10 @@ class UserRepository {
     return result.lastID;
   }
 
+  async updatePassword(username, hash) {
+    return runQuery('UPDATE users SET password_hash = ? WHERE username = ?', [hash, username]);
+  }
+
   async getUserState(userId) {
     return getRow(`SELECT * FROM user_state WHERE user_id = ?`, [userId]);
   }

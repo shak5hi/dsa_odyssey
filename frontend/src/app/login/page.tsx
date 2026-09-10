@@ -7,7 +7,7 @@ import './login.css';
 import { API_BASE_URL } from '@/config/api';
 
 export default function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,18 +27,33 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    const url = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/register`;
+    let url = `${API_BASE_URL}/login`;
+    if (mode === 'register') url = `${API_BASE_URL}/register`;
+    else if (mode === 'reset') url = `${API_BASE_URL}/reset-password`;
+
+    let bodyData: any = { username };
+    if (mode === 'reset') bodyData.newPassword = password;
+    else bodyData.password = password;
 
     try {
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify(bodyData),
       });
       const data = await res.json();
 
       if (!res.ok || !data.success) {
         setError(data.error || 'Authentication failed');
+        setLoading(false);
+        return;
+      }
+
+      if (mode === 'reset') {
+        setError('');
+        setMode('login');
+        setPassword('');
+        alert('Password reset successful! You can now login.');
         setLoading(false);
         return;
       }
@@ -80,20 +95,20 @@ export default function LoginPage() {
             </div>
             <div className="auth-pixel-divider" />
             <div className="auth-title">
-              {isLogin ? '⚔️ Enter the Kingdom' : '📜 Create Account'}
+              {mode === 'login' ? '⚔️ Enter the Kingdom' : mode === 'register' ? '📜 Create Account' : '🔑 Reset Password'}
             </div>
           </div>
 
           <div className="auth-tabs">
             <button
-              className={`auth-tab ${isLogin ? 'active' : ''}`}
-              onClick={() => { setIsLogin(true); setError(''); }}
+              className={`auth-tab ${mode === 'login' ? 'active' : ''}`}
+              onClick={() => { setMode('login'); setError(''); }}
             >
               Login
             </button>
             <button
-              className={`auth-tab ${!isLogin ? 'active' : ''}`}
-              onClick={() => { setIsLogin(false); setError(''); }}
+              className={`auth-tab ${mode === 'register' ? 'active' : ''}`}
+              onClick={() => { setMode('register'); setError(''); }}
             >
               Register
             </button>
@@ -122,21 +137,36 @@ export default function LoginPage() {
               </div>
 
               <div className="auth-field">
-                <label className="auth-label">Password</label>
+                <label className="auth-label">{mode === 'reset' ? 'New Password' : 'Password'}</label>
                 <input
                   type="password"
                   className="auth-input"
-                  placeholder="Enter your password"
+                  placeholder={`Enter your ${mode === 'reset' ? 'new ' : ''}password`}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  autoComplete={isLogin ? 'current-password' : 'new-password'}
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                 />
               </div>
 
               <button type="submit" className="auth-btn" disabled={loading}>
-                {loading ? <><span className="auth-spinner" />Loading...</> : isLogin ? '⚔️ Login' : '📜 Create Account'}
+                {loading ? <><span className="auth-spinner" />Loading...</> : mode === 'login' ? '⚔️ Login' : mode === 'register' ? '📜 Create Account' : '🔑 Reset Password'}
               </button>
+
+              {mode === 'login' && (
+                <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                  <button type="button" onClick={() => { setMode('reset'); setError(''); }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem', fontFamily: 'inherit' }}>
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+              {mode === 'reset' && (
+                <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                  <button type="button" onClick={() => { setMode('login'); setError(''); }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem', fontFamily: 'inherit' }}>
+                    Back to Login
+                  </button>
+                </div>
+              )}
             </form>
           </div>
 
