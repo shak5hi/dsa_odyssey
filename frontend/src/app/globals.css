@@ -121,7 +121,7 @@ a:hover { color: var(--gold); }
   animation: pan-bg 60s linear infinite;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.15;
 }
 
 /* Subtle dark wash so the navy cards and white text pop perfectly */
@@ -129,7 +129,7 @@ a:hover { color: var(--gold); }
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(10,14,26,0.3) 0%, rgba(10,14,26,0.6) 100%);
+  background: radial-gradient(circle at center, rgba(10,14,26,0.5) 0%, rgba(10,14,26,0.9) 100%);
   pointer-events: none;
   z-index: 0;
 }

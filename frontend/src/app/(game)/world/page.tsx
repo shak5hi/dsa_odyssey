@@ -1,6 +1,6 @@
 'use client';
 import { useGame } from '@/store/GameContext';
-import { REALMS } from '@/constants/realms';
+import { REALMS, REALM_PROGRESSION } from '@/constants/realms';
 import Link from 'next/link';
 
 export default function WorldPage() {
@@ -26,7 +26,9 @@ export default function WorldPage() {
                 const done = r.questions.filter(q => state.completed[q.id]).length;
                 const pct = total ? Math.round(done / total * 100) : 0;
                 const mastered = done === total && total > 0;
-                const unlocked = done > 0;
+                const activeIdx = REALM_PROGRESSION.indexOf(state.activeRealm);
+                const currentIdx = REALM_PROGRESSION.indexOf(r.id);
+                const unlocked = currentIdx <= activeIdx;
                 const status = mastered ? 'mastered' : unlocked ? 'unlocked' : 'locked';
                 const barColor = mastered ? 'var(--gold)' : unlocked ? 'var(--green)' : 'var(--muted)';
                 const xpLeft = r.questions.reduce((a, q) => a + (state.completed[q.id] ? 0 : q.xp), 0);

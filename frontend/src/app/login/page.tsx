@@ -16,9 +16,10 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // If already logged in, skip to kingdom
+    // If already logged in, skip to last visited path or kingdom
     const token = localStorage.getItem('auth_token');
-    if (token) router.push('/kingdom');
+    const lastPath = localStorage.getItem('last_path') || '/kingdom';
+    if (token) router.push(lastPath);
     else setMounted(true);
   }, [router]);
 
@@ -60,7 +61,8 @@ export default function LoginPage() {
 
       localStorage.setItem('auth_token', data.token);
       localStorage.setItem('username', data.user.username);
-      router.push('/kingdom');
+      const lastPath = localStorage.getItem('last_path') || '/kingdom';
+      router.push(lastPath);
     } catch (err) {
       setError('Could not connect to the server. Is the backend running?');
       setLoading(false);

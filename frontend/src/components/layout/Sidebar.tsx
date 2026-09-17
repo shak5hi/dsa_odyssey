@@ -30,8 +30,9 @@ export function Sidebar() {
     if (typeof window !== 'undefined') {
       const u = localStorage.getItem('username');
       if (u) setUsername(u);
+      localStorage.setItem('last_path', pathname);
     }
-  }, []);
+  }, [pathname]);
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
