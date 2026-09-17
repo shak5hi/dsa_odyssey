@@ -30,6 +30,11 @@ export function Sidebar() {
     if (typeof window !== 'undefined') {
       const u = localStorage.getItem('username');
       if (u) setUsername(u);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('last_path', pathname);
     }
   }, [pathname]);
